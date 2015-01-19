@@ -39,6 +39,7 @@ class AbstractChosen
     @option_html_pattern = @options.option_html_pattern || @option_text_token
     @display_selected_options = if @options.display_selected_options? then @options.display_selected_options else true
     @display_disabled_options = if @options.display_disabled_options? then @options.display_disabled_options else true
+    @include_group_label_in_selected = @options.include_group_label_in_selected || false
 
 
   set_default_text: ->
@@ -50,6 +51,12 @@ class AbstractChosen
       @default_text = @options.placeholder_text_single || @options.placeholder_text || AbstractChosen.default_single_text
 
     @results_none_found = @form_field.getAttribute("data-no_results_text") || @options.no_results_text || AbstractChosen.default_no_result_text
+
+  choice_label: (item) ->
+    if @include_group_label_in_selected and item.group_label?
+      "<b class='group-name'>#{item.group_label}</b>#{item.html}"
+    else
+      item.html
 
   mouse_enter: -> @mouse_on_container = true
   mouse_leave: -> @mouse_on_container = false
