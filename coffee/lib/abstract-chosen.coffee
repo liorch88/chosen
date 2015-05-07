@@ -87,7 +87,7 @@ class AbstractChosen
         if data.selected and @is_multiple
           this.choice_build data
         else if data.selected and not @is_multiple
-          this.single_set_selected_text(data.text)
+          this.single_set_selected_text(this.choice_label(data))
 
     content
 
@@ -106,8 +106,10 @@ class AbstractChosen
     option_el.className = classes.join(" ")
     option_el.style.cssText = option.style
     option_el.setAttribute("data-option-array-index", option.array_index)
+
     option_el.setAttribute("data-value", option.value)
     option_el.innerHTML = @option_html_pattern.replace(@option_text_token, option.search_text)
+    option_el.title = option.title if option.title
 
     this.outerHTML(option_el)
 
@@ -122,6 +124,7 @@ class AbstractChosen
     group_el = document.createElement("li")
     group_el.className = classes.join(" ")
     group_el.innerHTML = group.search_text
+    group_el.title = group.title if group.title
 
     this.outerHTML(group_el)
 
@@ -173,10 +176,10 @@ class AbstractChosen
           results_group = @results_data[option.group_array_index]
           results += 1 if results_group.active_options is 0 and results_group.search_match
           results_group.active_options += 1
-                
-        unless option.group and not @group_search
 
-          option.search_text = if option.group then option.label else option.text
+        option.search_text = if option.group then option.label else option.html
+
+        unless option.group and not @group_search
           option.search_match = this.search_string_match(option.search_text, regex)
           results += 1 if option.search_match and not option.group
 
@@ -187,7 +190,7 @@ class AbstractChosen
               option.search_text = text.substr(0, startpos) + '<em>' + text.substr(startpos)
 
             results_group.group_match = true if results_group?
-          
+
           else if option.group_array_index? and @results_data[option.group_array_index].search_match
             option.search_match = true
 
@@ -221,7 +224,7 @@ class AbstractChosen
     @selected_option_count = 0
     for option in @form_field.options
       @selected_option_count += 1 if option.selected
-    
+
     return @selected_option_count
 
   choices_click: (evt) ->
@@ -279,7 +282,7 @@ class AbstractChosen
     tmp.appendChild(element)
     tmp.innerHTML
 
-  # class methods and variables ============================================================ 
+  # class methods and variables ============================================================
 
   @browser_is_supported: ->
     if window.navigator.appName == "Microsoft Internet Explorer"
