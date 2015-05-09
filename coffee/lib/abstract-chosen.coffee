@@ -106,9 +106,8 @@ class AbstractChosen
     option_el.className = classes.join(" ")
     option_el.style.cssText = option.style
     option_el.setAttribute("data-option-array-index", option.array_index)
-
     option_el.setAttribute("data-value", option.value)
-    option_el.innerHTML = @option_html_pattern.replace(@option_text_token, option.search_text)
+    option_el.innerHTML = option.parsed_template
     option_el.title = option.title if option.title
 
     this.outerHTML(option_el)
@@ -178,7 +177,7 @@ class AbstractChosen
           results_group.active_options += 1
 
         option.search_text = if option.group then option.label else option.html
-
+        option.parsed_template = @option_html_pattern.replace(@option_text_token, option.search_text);
         unless option.group and not @group_search
           option.search_match = this.search_string_match(option.search_text, regex)
           results += 1 if option.search_match and not option.group
