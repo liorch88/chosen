@@ -383,8 +383,9 @@ class Chosen extends AbstractChosen
     @selected_item.find("span").html(text)
 
   single_set_selected_class: (item) ->
-    @selected_item.children("span").removeClass();
-    @selected_item.children("span").addClass(item.classes);   
+    @selected_item.children("span").removeClass()
+    if item.classes.length > 0
+      @selected_item.children("span").addClass(item.classes)
 
   result_deselect: (pos) ->
     result_data = @results_data[pos]

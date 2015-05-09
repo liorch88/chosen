@@ -376,7 +376,8 @@ class @Chosen extends AbstractChosen
     @selected_item.down("span").update(text)
 
   single_set_selected_class: (item) ->
-    @selected_item.down("span").className = item.classes
+    if item.classes.length > 0
+      @selected_item.down("span").className = item.classes
 
   result_deselect: (pos) ->
     result_data = @results_data[pos]
