@@ -29,6 +29,9 @@ class AbstractChosen
     @single_backstroke_delete = if @options.single_backstroke_delete? then @options.single_backstroke_delete else true
     @max_selected_options = @options.max_selected_options || Infinity
     @inherit_select_classes = @options.inherit_select_classes || false
+    @option_text_token = "%{text}%" || @options.option_text_token
+    @option_html_pattern = @options.option_html_pattern || @option_text_token
+    @use_parsed_html_in_selected = @options.use_parsed_html_in_selected || false
     @display_selected_options = if @options.display_selected_options? then @options.display_selected_options else true
     @display_disabled_options = if @options.display_disabled_options? then @options.display_disabled_options else true
     @include_group_label_in_selected = @options.include_group_label_in_selected || false
@@ -44,10 +47,13 @@ class AbstractChosen
     @results_none_found = @form_field.getAttribute("data-no_results_text") || @options.no_results_text || AbstractChosen.default_no_result_text
 
   choice_label: (item) ->
+    html = item.html
+    if @use_parsed_html_in_selected
+      html = item.parsed_html
     if @include_group_label_in_selected and item.group_label?
-      "<b class='group-name'>#{item.group_label}</b>#{item.html}"
+      "<b class='group-name'>#{item.group_label}</b>#{html}"
     else
-      item.html
+      html
 
   mouse_enter: -> @mouse_on_container = true
   mouse_leave: -> @mouse_on_container = false
@@ -96,7 +102,7 @@ class AbstractChosen
     option_el.className = classes.join(" ")
     option_el.style.cssText = option.style
     option_el.setAttribute("data-option-array-index", option.array_index)
-    option_el.innerHTML = option.search_text
+    option_el.innerHTML = option.parsed_html
     option_el.title = option.title if option.title
 
     this.outerHTML(option_el)
@@ -166,6 +172,7 @@ class AbstractChosen
           results_group.active_options += 1
 
         option.search_text = if option.group then option.label else option.html
+        option.parsed_html = @option_html_pattern.replace(@option_text_token, option.search_text);
 
         unless option.group and not @group_search
           option.search_match = this.search_string_match(option.search_text, regex)
