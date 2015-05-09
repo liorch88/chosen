@@ -357,6 +357,8 @@ class Chosen extends AbstractChosen
         this.choice_build item
       else
         this.single_set_selected_text(this.choice_label(item))
+        if @use_option_class_in_selected
+            this.single_set_selected_class(item)
 
       if (@always_open)
         this.winnow_results()
@@ -379,6 +381,10 @@ class Chosen extends AbstractChosen
       @selected_item.removeClass("chosen-default")
 
     @selected_item.find("span").html(text)
+
+  single_set_selected_class: (item) ->
+    @selected_item.children("span").removeClass();
+    @selected_item.children("span").addClass(item.classes);   
 
   result_deselect: (pos) ->
     result_data = @results_data[pos]
