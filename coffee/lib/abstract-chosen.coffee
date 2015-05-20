@@ -58,7 +58,7 @@ class AbstractChosen
   choice_label: (item) ->
     html = item.html
     if @use_parsed_html_in_selected
-      html = item.parsed_html
+      html = @option_html_pattern.replace(@option_text_token, item.html)
     if @include_group_label_in_selected and item.group_label?
       "<b class='group-name'>#{item.group_label}</b>#{html}"
     else
