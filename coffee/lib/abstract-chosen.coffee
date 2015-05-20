@@ -93,6 +93,8 @@ class AbstractChosen
           this.choice_build data
         else if data.selected and not @is_multiple
           this.single_set_selected_text(this.choice_label(data))
+          if @use_option_class_in_selected
+            this.single_set_selected_class(data)
 
     content
 
